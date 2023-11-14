@@ -2,44 +2,54 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import Logo from '../../images/logo/logo-pikapp.png';
 import { useState } from 'react';
+import type { User } from '../../types/users';
 
-const apiUrl = "https://pikapp-express-api-production.up.railway.app/api/"
-
+const apiUrl = "https://pikapp-express-api-production.up.railway.app/api/";
+localStorage.setItem('apiUrl', "https://pikapp-express-api-production.up.railway.app/api/");
 const SignIn = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [loginFailed, setLoginFailed] = useState('.');
-    const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginFailed, setLoginFailed] = useState('.');
+  const navigate = useNavigate();
 
-    const handleLogin = async () => {
-      try {
-        const data = {
-          username: email,
-          password: password,
-        };
-        if (/^\s*$/.test(email) || /^\s*$/.test(password)) {
-          setLoginFailed("Please enter both your username and password.");
-        } else {
-          const response = await fetch(`${apiUrl}auth/signin`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-          });
-          if (!response.ok)
-            setLoginFailed("Wrong username and password combination.");
-          else {
-            navigate('/');
-          }
+  type ApiResponse<T> = {
+    message: string, success: boolean, data: T
+  }
 
-          localStorage.setItem('user', await response.json());
+  type LoginRes = {token: string, user: User}
+
+  type cRes = ApiResponse<LoginRes>
+  const handleLogin = async () => {
+    try {
+      const data = {
+        username: email,
+        password: password,
+      };
+      if (/^\s*$/.test(email) || /^\s*$/.test(password)) {
+        setLoginFailed("Please enter both your username and password.");
+      } else {
+        const response = await fetch(`${apiUrl}auth/signin`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+        if (!response.ok)
+          setLoginFailed("Wrong username and password combination.");
+        else {
+          const u: cRes = await response.json();
+          localStorage.setItem('token', u.data.token );
+          navigate('/');
         }
-
-      }catch (error) {
-        console.error('Login failed:', error);
       }
+
+      // Create the necessary types using the types folder. Create the generic type and define the better using the types inside types folder.
+
+    } catch (error) {
+      console.error('Login failed:', error);
     }
+  }
 
   return (
     <>
@@ -134,10 +144,10 @@ const SignIn = () => {
                   </div>
                 </div>
                 <div className='my-3'>
-                    <p className='text-danger text-center'>{loginFailed}</p>
+                  <p className='text-danger text-center'>{loginFailed}</p>
                 </div>
                 <div className="mb-5">
-                  <input 
+                  <input
                     onClick={handleLogin}
                     type='submit'
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
@@ -146,7 +156,7 @@ const SignIn = () => {
                 <div className="mt-6 mb-10 text-center">
                   <p>
                     Don’t have any account?{' '}
-                    
+
                     <Link to="/auth/signup" className="text-primary">
                       Sign Up
                     </Link>
