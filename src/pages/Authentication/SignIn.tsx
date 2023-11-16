@@ -3,19 +3,20 @@ import { Link } from 'react-router-dom';
 import Logo from '../../images/logo/logo-pikapp.png';
 import { useState } from 'react';
 import type { User } from '../../types/users';
+import ApiResponse from '../../fetches/ApiResponse';
 
-const apiUrl = "https://pikapp-express-api-production.up.railway.app/api/";
+
 localStorage.setItem('apiUrl', "https://pikapp-express-api-production.up.railway.app/api/");
+
+const apiUrl = localStorage.getItem('apiUrl');
+
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginFailed, setLoginFailed] = useState('.');
   const navigate = useNavigate();
 
-  type ApiResponse<T> = {
-    message: string, success: boolean, data: T
-  }
-
+  // this is the login respose
   type LoginRes = {token: string, user: User}
 
   type cRes = ApiResponse<LoginRes>

@@ -3,7 +3,8 @@ import {
   CreateUserSchema,
   UpdateUserPasswordSchema,
   UpdateUserSchema,
-  UserFiltersSchema,UserSchema
+  UserFiltersSchema,
+  UserSchema
 } from "../validation/user";
 
 export type User = z.infer<typeof UserSchema>;

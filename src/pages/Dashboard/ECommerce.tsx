@@ -8,64 +8,29 @@ import ChartTwo from '../../components/ChartTwo.tsx';
 import ChatCard from '../../components/ChatCard.tsx';
 import MapOne from '../../components/MapOne.tsx';
 import TableOne from '../../components/TableOne.tsx';
-import React, { useEffect, useState } from 'react';
 
   const apiUrl = localStorage.getItem('apiUrl');
-  const bearerToken = localStorage.getItem('bearerToken');
-  async function getData() {
-    const response = await fetch(`${apiUrl}getusers`, {
-      method: 'POST',
+  const bearerToken = localStorage.getItem('token');
+  async function getUsers() {
+    const response = await fetch(`${apiUrl}users`, {
+      method: 'GET',
       headers: {
+        'Authorization': `Bearer ${bearerToken}`,
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${bearerToken}`
       },
     });
-    if (!response.ok)
+    if (!response.ok) {
       console.log("Can't get users.");
+      console.log( await response.json() );
       
-    else {
-      console.log("Got some users.");
-      
+    } else {
+      console.log("God some users.");
+      console.log( await response.json() );
     }
   }
 
-  interface ApiResponse {
-    userId: number;
-    username: string;
-    // Add more properties as needed
-  }
-
 const ECommerce = () => {
-  
-    const [data, setData] = useState<ApiResponse | null>(null);
-    const [error, setError] = useState<string | null>(null);
-  
-    useEffect(() => {
-      const bearerToken = localStorage.getItem('apiUrl');
-      const apiUrl = localStorage.getItem('apiUrl');
-  
-      fetch(`${apiUrl}users`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${bearerToken}`,
-          'Content-Type': 'application/json',
-        },
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then((apiData: ApiResponse) => {
-          setData(apiData);
-        })
-        .catch(error => {
-          setError(`Fetch error: ${error.message}`);
-        });
-    }, []);
-  
-
+  getUsers();
   return (
     <>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
