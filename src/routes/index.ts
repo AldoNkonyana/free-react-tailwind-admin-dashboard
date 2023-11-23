@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 
-const Drivers = lazy(() => import('../pages/Drivers'));
+const Users = lazy(() => import('../pages/Users'));
+const Rides = lazy(() => import('../pages/Rides'));
 const Calendar = lazy(() => import('../pages/Calendar'));
 const Chart = lazy(() => import('../pages/Chart'));
 const FormElements = lazy(() => import('../pages/Form/FormElements'));
@@ -13,9 +14,14 @@ const Buttons = lazy(() => import('../pages/UiElements/Buttons'));
 
 const coreRoutes = [
   {
-    path: '/drivers',
-    title: 'Drivers',
-    component: Drivers,
+    path: '/users',
+    title: 'Users',
+    component: Users,
+  },
+  {
+    path: '/rides',
+    title: 'Rides',
+    component: Rides,
   },
   {
     path: '/calendar',
